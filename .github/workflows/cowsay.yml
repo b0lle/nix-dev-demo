@@ -1,0 +1,20 @@
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  cowsay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            substituters = https://hydra.iohk.io https://cache.nixos.org/
+      # - run: nix build
+      # - run: nix flake check
+      - uses: nicknovitski/nix-develop@v1
+      - run: cowsay hi
+      - run: poetry --version
